@@ -5,3 +5,36 @@ git commit -m "first commit"
 git branch -M main
 git remote add origin https://github.com/RavenSampson/smart-on-fhir.git
 git push -u origin main
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>SMART FHIR App Launch</title>
+  <script src="https://cdn.jsdelivr.net/npm/fhirclient@4.2.0/dist/fhir-client.min.js"></script>
+</head>
+<body>
+  <h1>SMART on FHIR App</h1>
+
+  <script>
+    // Initialize SMART client
+    const smart = FHIR.client({
+      clientId: a0f16d2f-0f6a-4380-88a6-c237f6b275ba,
+      scope: "patient/Patient.read patient/Observation.read",
+      redirectUri: "https://RavenSampson.github.io/smart-on-fhir-tutorial/example-smart-app/",
+      iss: "https://fhir.cerner.com/dstu2/{your-sandbox-id}" // Cerner sandbox ISS; use the one from your Code Console
+    });
+
+    // Launch app with your patient ID
+    smart.ready().then(client => {
+      const patientId = "a0f16d2f-0f6a-4380-88a6-c237f6b275ba";
+
+      client.request(`Patient/${patientId}`).then(patient => {
+        console.log("Patient data loaded:", patient);
+        document.body.innerHTML += `<pre>${JSON.stringify(patient, null, 2)}</pre>`;
+      }).catch(err => {
+        console.error("Error loading patient:", err);
+      });
+    });
+  </script>
+</body>
+</html>
